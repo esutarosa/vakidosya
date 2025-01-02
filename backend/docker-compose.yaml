@@ -6,6 +6,7 @@ services:
     image: postgres:15.2
     restart: always
     environment:
+      - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
@@ -13,10 +14,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - backend
+      - vakidosya-backend
 
 volumes:
   postgres_data:
 
 networks:
-  backend:
+  vakidosya-backend:
