@@ -7,6 +7,7 @@ import { NestDrizzleModule } from 'src/core/drizzle/drizzle.module';
 import { getGraphQLConfig, getDrizzleConfig } from 'src/core/config';
 
 import { IS_DEV_ENV } from 'src/shared/utils/is-dev.util';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { IS_DEV_ENV } from 'src/shared/utils/is-dev.util';
       useFactory: getGraphQLConfig,
       inject: [ConfigService],
     }),
+    RedisModule,
   ],
 })
 export class CoreModule {}
