@@ -5,9 +5,10 @@ import { ApolloDriver } from '@nestjs/apollo';
 
 import { NestDrizzleModule } from 'src/core/drizzle/drizzle.module';
 import { getGraphQLConfig, getDrizzleConfig } from 'src/core/config';
+import { AccountModule } from 'src/modules/auth/account/account.module';
+import { RedisModule } from 'src/core/redis/redis.module';
 
 import { IS_DEV_ENV } from 'src/shared/utils/is-dev.util';
-import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -15,16 +16,18 @@ import { RedisModule } from './redis/redis.module';
       ignoreEnvFile: !IS_DEV_ENV,
       isGlobal: true,
     }),
+    GraphQLModule.forRootAsync({
+      driver: ApolloDriver,
+      imports: [ConfigModule],
+      useFactory: getGraphQLConfig,
+      inject: [ConfigService],
+    }),
     NestDrizzleModule.forRootAsync({
       useFactory: getDrizzleConfig,
       inject: [ConfigService],
     }),
-    GraphQLModule.forRootAsync({
-      driver: ApolloDriver,
-      useFactory: getGraphQLConfig,
-      inject: [ConfigService],
-    }),
     RedisModule,
+    AccountModule,
   ],
 })
 export class CoreModule {}
