@@ -1,19 +1,13 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
-import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { hash } from 'argon2';
 
 import { CreateUserInput } from './inputs/create-user.input';
 
-import { DRIZZLE_ORM } from 'src/shared/constants/db.constants';
+import { DrizzleDatabase } from 'src/core/drizzle/drizzle.database';
 import * as schema from 'src/core/drizzle/schemas/drizzle.schemas';
 
 @Injectable()
-export class AccountService {
-  public constructor(
-    @Inject(DRIZZLE_ORM)
-    private readonly db: PostgresJsDatabase<typeof schema>,
-  ) {}
-
+export class AccountService extends DrizzleDatabase {
   public async findAll() {
     return await this.db.query.users.findMany();
   }

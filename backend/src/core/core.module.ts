@@ -5,8 +5,9 @@ import { ApolloDriver } from '@nestjs/apollo';
 
 import { NestDrizzleModule } from 'src/core/drizzle/drizzle.module';
 import { getGraphQLConfig, getDrizzleConfig } from 'src/core/config';
-import { AccountModule } from 'src/modules/auth/account/account.module';
 import { RedisModule } from 'src/core/redis/redis.module';
+import { AccountModule } from 'src/modules/auth/account/account.module';
+import { SessionModule } from 'src/modules/auth/session/session.module';
 
 import { IS_DEV_ENV } from 'src/shared/utils/is-dev.util';
 
@@ -28,6 +29,7 @@ import { IS_DEV_ENV } from 'src/shared/utils/is-dev.util';
     }),
     RedisModule,
     AccountModule,
+    SessionModule,
   ],
 })
 export class CoreModule {}
