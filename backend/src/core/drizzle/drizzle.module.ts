@@ -6,7 +6,6 @@ import type {
 
 import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
 import { DrizzleService } from './drizzle.service';
-import { DrizzleDatabase } from './drizzle.database';
 import {
   connectionFactory,
   createNestDrizzleProviders,
@@ -16,8 +15,8 @@ import { NEST_DRIZZLE_OPTIONS } from 'src/shared/constants/db.constants';
 
 @Global()
 @Module({
-  providers: [DrizzleService, connectionFactory, DrizzleDatabase],
-  exports: [DrizzleService, connectionFactory, DrizzleDatabase],
+  providers: [DrizzleService, connectionFactory],
+  exports: [DrizzleService, connectionFactory],
 })
 export class NestDrizzleModule {
   public static register(options: NestDrizzleOptions): DynamicModule {
