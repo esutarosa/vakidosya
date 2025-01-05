@@ -1,14 +1,11 @@
-export interface User {
+export type User = {
   id: number;
   email: string;
-  username?: string;
-  createdAt: Date;
-  profile?: Profile;
-}
-
-export interface Profile {
-  id: number;
+  password: string;
+  username: string;
+  displayName: string;
+  avatar?: string;
   bio?: string;
-  userId: number;
-  user?: User;
-}
+  createdAt: Date;
+  updatedAt?: Date;
+};
