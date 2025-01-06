@@ -3,6 +3,7 @@ import type { Request } from 'express';
 import { verify } from 'argon2';
 import {
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -13,14 +14,12 @@ import { LoginInput } from './inputs/login.inputs';
 
 import { DRIZZLE_ORM } from 'src/shared/constants/db.constants';
 import * as schema from 'src/core/drizzle/schemas/drizzle.schemas';
-import { InternalServerErrorException } from 'src/core/exceptions';
-import { ExceptionConstants } from 'src/shared/constants/exceptions.constants';
 
 @Injectable()
 export class SessionService {
   public constructor(
-    private readonly configService: ConfigService,
     @Inject(DRIZZLE_ORM) private readonly db: PostgresJsDatabase<typeof schema>,
+    private readonly configService: ConfigService,
   ) {}
 
   public async login(req: Request, input: LoginInput) {
@@ -43,21 +42,16 @@ export class SessionService {
 
     return new Promise((resolve, reject) => {
       req.session.createdAt = new Date();
-      req.session.usersId = user.id;
+      req.session.userId = user.id;
 
       req.session.save((err) => {
         if (err) {
           return reject(
-            new InternalServerErrorException({
-              message: 'A database error occurred while saving the session.',
-              code: ExceptionConstants.InternalServerErrorCodes.DATABASE_ERROR,
-              cause: err,
-              description:
-                'Failed to save session in the database. Please check the session storage configuration.',
-            }),
+            new InternalServerErrorException(
+              'A database error occurred while saving the session.',
+            ),
           );
         }
-
         resolve(user);
       });
     });
@@ -68,21 +62,15 @@ export class SessionService {
       req.session.destroy((err) => {
         if (err) {
           return reject(
-            new InternalServerErrorException({
-              message:
-                'A database error occurred while destroying the session.',
-              code: ExceptionConstants.InternalServerErrorCodes.DATABASE_ERROR,
-              cause: err,
-              description:
-                'Failed to destroy the session in the database. Please check the session storage configuration or ensure the session still exists.',
-            }),
+            new InternalServerErrorException(
+              'A database error occurred while destroying the session.',
+            ),
           );
         }
 
         req.res.clearCookie(
           this.configService.getOrThrow<string>('SESSION_NAME'),
         );
-
         resolve(true);
       });
     });

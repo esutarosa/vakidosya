@@ -32,12 +32,6 @@ export class GqlAuthGuard implements CanActivate {
       where: (users, { eq }) => eq(users.id, request.session.userId),
     });
 
-    if (!user) {
-      throw new UnauthorizedException({
-        message: 'User not found',
-      });
-    }
-
     request.user = user;
 
     return true;

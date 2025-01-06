@@ -1,21 +1,23 @@
-import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
+import {
+  createParamDecorator,
+  UnauthorizedException,
+  type ExecutionContext,
+} from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 import type { User } from '../types/user.type';
 
 export const Authorized = createParamDecorator(
   (data: keyof User, ctx: ExecutionContext) => {
-    let user: User;
+    const context =
+      ctx.getType() === 'http'
+        ? ctx.switchToHttp().getRequest()
+        : GqlExecutionContext.create(ctx).getContext().req;
 
-    if (ctx.getType() === 'http') {
-      user = ctx.switchToHttp().getRequest()?.user;
-    } else {
-      const context = GqlExecutionContext.create(ctx);
-      user = context.getContext().req?.user;
-    }
+    const user = context.user;
 
     if (!user) {
-      throw new Error('User not found in request');
+      throw new UnauthorizedException('User not found in request');
     }
 
     return data ? user[data] : user;
