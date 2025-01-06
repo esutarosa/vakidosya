@@ -1,7 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
+import type { User } from 'src/shared/types/user.type';
+
 @ObjectType()
-export class UserModel {
+export class UserModel implements User {
   @Field(() => Number)
   public id: number;
 
