@@ -1,4 +1,4 @@
-import type { GqlContext } from 'src/shared/types/gql-context.type';
+import type { GqlContext } from 'src/shared/types/gql-context.types';
 
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 
