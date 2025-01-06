@@ -14,6 +14,7 @@ import { LoginInput } from './inputs/login.inputs';
 
 import { DRIZZLE_ORM } from 'src/shared/constants/db.constants';
 import * as schema from 'src/core/drizzle/schemas/drizzle.schemas';
+import { getSessionMetadata } from 'src/shared/utils/session-metadata.util';
 
 @Injectable()
 export class SessionService {
@@ -22,7 +23,7 @@ export class SessionService {
     private readonly configService: ConfigService,
   ) {}
 
-  public async login(req: Request, input: LoginInput) {
+  public async login(req: Request, input: LoginInput, userAgent: string) {
     const { login, password } = input;
 
     const user = await this.db.query.users.findFirst({
@@ -40,9 +41,12 @@ export class SessionService {
       throw new UnauthorizedException('Invalid credentials.');
     }
 
+    const metadata = getSessionMetadata(req, userAgent);
+
     return new Promise((resolve, reject) => {
       req.session.createdAt = new Date();
       req.session.userId = user.id;
+      req.session.metadata = metadata;
 
       req.session.save((err) => {
         if (err) {

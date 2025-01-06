@@ -5,6 +5,7 @@ import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { SessionService } from './session.service';
 import { UserModel } from '../account/models/user.model';
 import { LoginInput } from './inputs/login.inputs';
+import { UserAgent } from 'src/shared/decorators/user-agent.decorator';
 
 @Resolver('Session')
 export class SessionResolver {
@@ -14,8 +15,9 @@ export class SessionResolver {
   public async login(
     @Context() { req }: GqlContext,
     @Args('data') input: LoginInput,
+    @UserAgent() userAgent: string,
   ) {
-    return this.sessionService.login(req, input);
+    return this.sessionService.login(req, input, userAgent);
   }
 
   @Mutation(() => Boolean, { name: 'logoutUser' })
