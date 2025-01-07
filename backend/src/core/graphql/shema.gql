@@ -16,7 +16,7 @@ scalar DateTime
 type DeviceModel {
   browser: String!
   os: String!
-  type: Float!
+  type: String!
 }
 
 type LocationModel {
@@ -36,11 +36,11 @@ type Mutation {
   createUser(data: CreateUserInput!): Boolean!
   loginUser(data: LoginInput!): UserModel!
   logoutUser: Boolean!
-  removeSession(id: Float!): Boolean!
+  removeSession(id: String!): Boolean!
 }
 
 type Query {
-  findCurrentSSession: SessionModel!
+  findCurrentSession: SessionModel!
   findProfile: UserModel!
   findSessionsByUser: [SessionModel!]!
 }
@@ -52,8 +52,8 @@ type SessionMetadataModel {
 }
 
 type SessionModel {
-  createdAt: DateTime!
-  id: Float!
+  createdAt: String!
+  id: ID!
   metadata: SessionMetadataModel!
   userId: Float!
 }

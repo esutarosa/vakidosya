@@ -10,12 +10,12 @@ import {
 } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
 import { DRIZZLE_ORM } from 'src/shared/constants/db.constants';
 import { getSessionMetadata } from 'src/shared/utils/session-metadata.util';
 import * as schema from 'src/core/drizzle/schemas/drizzle.schemas';
 import { RedisService } from 'src/core/redis/redis.service';
-import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { LoginInput } from './inputs/login.inputs';
 
 @Injectable()
@@ -34,7 +34,8 @@ export class SessionService {
       throw new NotFoundException('User not found in the session.');
     }
 
-    const keys = await this.redisService.get('*');
+    const keys = await this.redisService.keys('*');
+
     const userSessions = [];
 
     for (const key of keys) {
@@ -54,7 +55,7 @@ export class SessionService {
 
     userSessions.sort((a, b) => b.createdAt - a.createdAt);
 
-    return userSessions.filter((session) => session.id === req.session.id);
+    return userSessions.filter((session) => session.id !== req.session.id);
   }
 
   public async findCurrent(req: Request) {
@@ -135,8 +136,8 @@ export class SessionService {
     return true;
   }
 
-  public async remove(req: Request, id: number) {
-    if (Number(req.session.id) === id) {
+  public async remove(req: Request, id: string) {
+    if (req.session.id === id) {
       throw new ConflictException('Cannot remove the current active session.');
     }
 

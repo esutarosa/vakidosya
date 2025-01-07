@@ -21,7 +21,7 @@ export class SessionResolver {
   }
 
   @Authorization()
-  @Query(() => SessionModel, { name: 'findCurrentSSession' })
+  @Query(() => SessionModel, { name: 'findCurrentSession' })
   public async findCurrent(@Context() { req }: GqlContext) {
     return this.sessionService.findCurrent(req);
   }
@@ -49,7 +49,7 @@ export class SessionResolver {
 
   @Authorization()
   @Mutation(() => Boolean, { name: 'removeSession' })
-  public async remove(@Context() { req }: GqlContext, @Args('id') id: number) {
+  public async remove(@Context() { req }: GqlContext, @Args('id') id: string) {
     return this.sessionService.remove(req, id);
   }
 }

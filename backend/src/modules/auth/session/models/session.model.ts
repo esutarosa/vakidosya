@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import type {
   DeviceInfo,
@@ -29,7 +29,7 @@ export class DeviceModel implements DeviceInfo {
   @Field(() => String)
   public os: string;
 
-  @Field(() => Number)
+  @Field(() => String)
   public type: string;
 }
 
@@ -47,14 +47,14 @@ export class SessionMetadataModel implements SessionMetadata {
 
 @ObjectType()
 export class SessionModel {
-  @Field(() => Number)
-  public id: number;
+  @Field(() => ID)
+  public id: string;
 
   @Field(() => Number)
   public userId: number;
 
-  @Field(() => Date)
-  public createdAt: Date;
+  @Field(() => String)
+  public createdAt: string;
 
   @Field(() => SessionMetadataModel)
   public metadata: SessionMetadataModel;
