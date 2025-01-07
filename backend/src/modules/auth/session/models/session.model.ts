@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 import type {
   DeviceInfo,
@@ -47,7 +47,7 @@ export class SessionMetadataModel implements SessionMetadata {
 
 @ObjectType()
 export class SessionModel {
-  @Field(() => ID)
+  @Field(() => String)
   public id: string;
 
   @Field(() => Number)

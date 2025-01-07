@@ -53,7 +53,7 @@ type SessionMetadataModel {
 
 type SessionModel {
   createdAt: String!
-  id: ID!
+  id: String!
   metadata: SessionMetadataModel!
   userId: Float!
 }

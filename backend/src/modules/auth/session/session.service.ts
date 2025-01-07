@@ -55,14 +55,14 @@ export class SessionService {
 
     userSessions.sort((a, b) => b.createdAt - a.createdAt);
 
-    return userSessions.filter((session) => session.id !== req.session.id);
+    return userSessions.filter((session) => session.id === req.session.id);
   }
 
   public async findCurrent(req: Request) {
     const sessionId = req.session.id;
 
     const sessionData = await this.redisService.get(
-      `${this.configService.getOrThrow<string>('SESSION_FOLDER')}:${sessionId}`,
+      `${this.configService.getOrThrow<string>('SESSION_FOLDER')}${sessionId}`,
     );
 
     const session = JSON.parse(sessionData);
